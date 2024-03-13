@@ -31,6 +31,8 @@ ALLOWED_HOSTS = ['FelipeCF.pythonanywhere.com']
 # Application definition
 
 INSTALLED_APPS = [
+    'enquetes.apps.EnquetesConfig',
+    #####
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
