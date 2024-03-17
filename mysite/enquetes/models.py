@@ -9,13 +9,13 @@ class Pergunta(models.Model):
     def publicada_recentemente(self):
         agora = timezone.now()
         return self.data_pub >= agora - date.timedelta(hours=24)
-     def __str__(self):
+    def __str__(self):
         return "{} ({})".format(self.texto, self.id)
-        
-        
+
+
 class Alternativa(models.Model):
     texto= models.CharField(max_length=250)
-    quant_votos= models.IntegerField('quantidade de votos', default=
+    quant_votos= models.IntegerField('quantidade de votos', default=0)
     pergunta_associada= models.ForeignKey(Pergunta, on_delete=models.CASCADE)
     def __str__(self):
         return "{} ({})".format(self.texto, self.id)
