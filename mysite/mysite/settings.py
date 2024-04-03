@@ -32,6 +32,7 @@ ALLOWED_HOSTS = ['FelipeCF.pythonanywhere.com']
 
 INSTALLED_APPS = [
     'enquetes.apps.EnquetesConfig',
+    'raiz.apps.RaizConfig',
     #####
     'django.contrib.admin',
     'django.contrib.auth',
