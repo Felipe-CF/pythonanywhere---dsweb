@@ -1,0 +1,22 @@
+<html>
+    <head>
+        <title>App Enquetes</title>
+    </head>
+
+    <body>
+        <h1>Aplicação de Enquetes - DsWeb 2024.1</h1>
+        {% if lista_enquetes%}
+            <ul>
+                <h2>Lista das enquetes cadastradas: </h2>
+                {% for p in lista_enquetes %}
+                    <li>
+                        <a href="/enquetes/{{p.id}}/"> {{p.texto}} </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <h3>Nenhuma enquetes cadastrada até o momento! </h3>
+        {% endif %}
+    </body>
+
+</html>
