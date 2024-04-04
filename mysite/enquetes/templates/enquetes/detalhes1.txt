@@ -1,0 +1,24 @@
+<html>
+    <head>
+        <title>
+            App Enquetes
+        </title>
+    </head>
+
+    <body>
+        <h1>
+            Aplicação de Enquetes - DsWeb 2024.1
+        </h1>
+        <h2>Enquete #{{enquete.id}}</h2>
+        <h2>{{enquete.texto}}</h2>
+        <p><i>{{enquete.data_pub}}</i></p>
+        <p>Selecione a alternativa desejada:</p>
+        <ul>
+            {%for alt in enquete.alternativa_set.all %}
+                <li>{{alt.texto}}</li>
+            {%endfor %}
+        </ul>
+        <hr>
+        <a href="{% url 'enquetes:index'  %}">Voltar</a>
+    </body>
+</html>

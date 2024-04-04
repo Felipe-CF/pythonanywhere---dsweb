@@ -10,7 +10,7 @@
                 <h2>Lista das enquetes cadastradas: </h2>
                 {% for p in lista_enquetes %}
                     <li>
-                        <a href="/enquetes/{{p.id}}/"> {{p.texto}} </a>
+                        <a href="{% url 'enquetes:detalhes' p.id %}"> {{p.texto}} </a>
                     </li>
                 {% endfor %}
             </ul>
