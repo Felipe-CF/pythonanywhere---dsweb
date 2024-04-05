@@ -43,8 +43,8 @@ def votacao(request, pergunta_id):
         alt = pergunta.alternativa_set.get(pk=id_alternativa)
     except (KeyError, Alternativa.DoesNotExist):
         contexto = {
-                'enquetes': pergunta,
-                'error': 'Você precisa selecionar uma alternativa'
+                'enquete': pergunta,
+                'error': 'Você precisa selecionar uma alternativa',
             }
         return render(request, 'enquetes/detalhes.html', contexto)
     else:
@@ -58,8 +58,7 @@ def votacao(request, pergunta_id):
 
 
 def resultado(request, pergunta_id):
-    pergunta = get_object_or_404(Pergunta, pk=pergunta_id)
-    return reder(request, )
-
+     pergunta = get_object_or_404(Pergunta, pk=pergunta_id)
+     return render(request, 'enquetes/resultado.html', {'enquete': pergunta} )
     # result = "RESULTADO da enquete de número %s"
     # return HttpResponse(result % pergunta_id)

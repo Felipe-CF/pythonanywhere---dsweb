@@ -15,16 +15,16 @@
 
         <p>Quantidades de votos em cada alternativa:</p>
 
-
             <ul>
                 {%for alt in enquete.alternativa_set.all %}
                     <li>
-                            {{alt.texto}} -- {{ quant_votos }}
+                            {{alt.texto}} -- {{ alt.quant_votos }}
+                            voto{{alt.quant_votos | pluralize}}
                     </li>
                 {%endfor %}
             </ul>
         <hr>
-        <a href="{% url 'enquetes:votacao' enquete.id %}">Votar novamente?</a>
+        <a href="{% url 'enquetes:detalhes' enquete.id %}">Votar novamente?</a>
         <a href="{% url 'enquetes:index'  %}">Voltar</a>
     </body>
 </html>
