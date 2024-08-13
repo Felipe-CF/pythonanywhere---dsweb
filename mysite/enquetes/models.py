@@ -1,6 +1,6 @@
-from django.utils import timezone
-from django.db import models
 import datetime
+from django.db import models
+from django.utils import timezone
 
 
 class Pergunta(models.Model):
@@ -11,6 +11,7 @@ class Pergunta(models.Model):
         agora = timezone.now()
         return self.data_pub >= agora - datetime.timedelta(hours=24)
         # timedelta --> variação do tempo
+
     def __str__(self):
         return "{} ({})".format(self.texto, self.id)
 

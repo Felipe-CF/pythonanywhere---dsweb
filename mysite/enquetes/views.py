@@ -1,64 +1,70 @@
-from django.http import HttpResponse, HttpResponseRedirect
-from .models import Pergunta, Alternativa
-from django.template import loader
-from django.shortcuts import get_object_or_404, render
+from django.views import View
 from django.urls import reverse
+from .models import Pergunta, Alternativa
+from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404, render
 
 
-def index(request):
-    lista = Pergunta.objects.all()
-    template = loader.get_template("enquetes/index.html")
-    contexto = {
-        'lista_enquetes': lista
-    }
-    return HttpResponse(template.render(contexto, request))
-    # return HttpResponse(
-    #     "<h1>Disciplina:DSWeb   Período: 2024.1</h1><h2>Matrícula: 20231014040005 - Aluno:Felipe da Costa Ferreira</h2>"
-    #     )
+class IndexView(View):
+    def get(self, request, *args, **kwargs): # '*' tem ideia de coleção
+        enquetes = Pergunta.objects.order_by('-data_pub')[:10]
+
+        contexto = {'lista_perguntas': enquetes}
+
+        return render(request, 'enquetes/index.html', contexto)
 
 
-def detalhes(request, pergunta_id):
-    # VERSÃO 1
-    # result = "DETALHES da enquete de número %s"
-    # return HttpResponse(result % pergunta_id)
-    # VERSÃO 2
-    # try:
-    #     pergunta =  Pergunta.objects.get(pk=pergunta_id)
-    # except Pergunta.DoesNotExist:
-    #     raise Http404("Identificação de enquete inválida!")
-    pergunta = get_object_or_404(Pergunta, pk=pergunta_id)
-    contexto = {
-        'enquete': pergunta
-    }
-    return render(request, 'enquetes/detalhes.html', contexto)
-    # render(request, 'enquetes/detalhes.html', {'enquete': pergunta})
+class DetalhesView(View): # sobrescrever o metodo get()
+    template = 'enquetes/detalhes.html'
+
+    def get(self, request, *args, **kwargs): # '*' tem ideia de coleção
+        pergunta_id = kwargs['pergunta_id']
+
+        pergunta = get_object_or_404(Pergunta, pk=pergunta_id)
+
+        contexto = {'pergunta': pergunta, 'error': None}
+
+        return render(request,self.template, contexto)
 
 
 
-def votacao(request, pergunta_id):
-    pergunta = get_object_or_404(Pergunta, pk=pergunta_id)
+    def post(self, request, *args, **kwargs):
+        pergunta_id = kwargs['pergunta_id']
 
-    try:
-        id_alternativa = request.POST['escolha']
-        alt = pergunta.alternativa_set.get(pk=id_alternativa)
-    except (KeyError, Alternativa.DoesNotExist):
-        contexto = {
-                'enquete': pergunta,
-                'error': 'Você precisa selecionar uma alternativa',
-            }
-        return render(request, 'enquetes/detalhes.html', contexto)
-    else:
-        alt.quant_votos += 1
-        alt.save()
-        return HttpResponseRedirect(reverse(
-            'enquetes:resultado', args=(pergunta_id,)
-        ))
+        pergunta = get_object_or_404(Pergunta, pk=pergunta_id)
+
+        try:
+            id_alternativa = request.POST['escolha']
+
+            alt = pergunta.alternativa_set.get(pk=id_alternativa)
+
+        except (KeyError, Alternativa.DoesNotExist):
+            erro = 'Você precisa selecionar uma alternativa',
+
+            return self.resposta(request, pergunta, erro)
+
+        else:
+            alt.quant_votos += 1
+
+            alt.save()
+
+            return HttpResponseRedirect(reverse(
+                'enquetes:resultado', args=(pergunta_id,)
+            ))
+
+    def reposta(self, request, pergunta, erro):
+        contexto = {'pergunta': pergunta, 'error':erro}
+        return render(request, self.template, contexto)
 
 
+class ResultadoView(View): # sobrescrever o metodo get()
+    def get(self, request, *args, **kwargs): # '*' tem ideia de coleção
+        pergunta_id = kwargs['pergunta_id']
+
+        pergunta = get_object_or_404(Pergunta, pk=pergunta_id)
+
+        contexto = {'pergunta': pergunta}
+
+        return render(request, 'enquetes/resultado.html', contexto)
 
 
-def resultado(request, pergunta_id):
-     pergunta = get_object_or_404(Pergunta, pk=pergunta_id)
-     return render(request, 'enquetes/resultado.html', {'enquete': pergunta} )
-    # result = "RESULTADO da enquete de número %s"
-    # return HttpResponse(result % pergunta_id)

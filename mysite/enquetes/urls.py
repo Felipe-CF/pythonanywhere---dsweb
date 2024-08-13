@@ -6,11 +6,11 @@ from django.urls import path
 app_name = 'enquetes'
 
 urlpatterns = [
-    # path('caminho', 'elemento de view', 'nome')
-    path('', views.index, name='index'),
-    path('<int:pergunta_id>/', views.detalhes, name='detalhes'),
-    path('<int:pergunta_id>/votacao/', views.votacao, name='votacao'),
-    path('<int:pergunta_id>/resultado/', views.resultado, name='resultado'),
+    path('', views.IndexView.as_view(), name='index'),
+
+    path('<int:pergunta_id>/', views.DetalhesView.as_view(), name='detalhes'),
+
+    path('<int:pergunta_id>/resultado/', views.ResultadoView.as_view(), name='resultado'),
 
 ]
 
