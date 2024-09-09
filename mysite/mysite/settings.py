@@ -25,7 +25,8 @@ SECRET_KEY = 'django-insecure-4sf+8*s#*cxl0quam6h5p=%vn2byusi8&ujuwhj+(1c=!vqu((
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['FelipeCF.pythonanywhere.com']
+# ALLOWED_HOSTS = ['FelipeCF.pythonanywhere.com']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -33,12 +34,14 @@ ALLOWED_HOSTS = ['FelipeCF.pythonanywhere.com']
 INSTALLED_APPS = [
     'enquetes.apps.EnquetesConfig',
     'raiz.apps.RaizConfig',
+    'bazar.apps.BazarConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_bootstrap_v5'
 ]
 
 MIDDLEWARE = [
