@@ -1,5 +1,6 @@
 import re
 from .models import *
+from bazar.forms import *
 from django.views import View
 from django.urls import reverse
 from django.contrib.auth.models import User
@@ -21,10 +22,38 @@ class UsuarioView(View):
 class CadastroView(View):
 
     def get(self, request,*args, **kwargs):
-        return render(request, "cadastro.html")
+
+        form = ClienteForm()
+
+        return render(request, "cadastro.html", {'form': form})
     
     def post(self, request, *args, **kwargs):
-        pass
+        
+        form = ClienteForm(request.POST)
+
+        if form.is_valid():
+
+            login = form.cleaned_data['login']
+
+            senha = form.cleaned_data['senha']
+
+            user = User.objects.create_user(username=login, password=senha)
+
+            cliente = form.save(commit=False)
+
+            cliente.user = user
+
+            cliente.save()
+
+            return HttpResponseRedirect(reverse('bazar:login'))
+        
+        else:
+            form = ClienteForm()
+
+            return render(request, "cadastro.html", {'form': form}) 
+
+
+
 
 class LogarView(View):
     def get(self, request, *args, **kwargs):

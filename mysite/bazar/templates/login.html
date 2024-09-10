@@ -7,5 +7,16 @@
 </head>
 <body>
     <h1>Login</h1>
+    <form action="{% url 'bazar:login' %}" method="post">
+        {% csrf_token %}
+
+        <label for="input-nome">Login</label>
+        <input id="input-nome" type="text" name="login" >
+        
+        <label for="input-senha">Senha</label>
+        <input id="input-senha" type="password" name="senha" >
+
+        <button type="submit" >Entrar</button>
+    </form>
 </body>
 </html>
