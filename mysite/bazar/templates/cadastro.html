@@ -6,10 +6,12 @@
     <title>Cadastro</title>
 </head>
 <body>
-    <h1>cadastro</h1>
+    <h1>Cadastro</h1>
 
     <form id="form-cadastro" name="cadastro" action="{% url 'bazar:cadastro' %}" method="post">
+
         {% csrf_token %}
+
         {{ form.as_p}}
 
         <button type="submit">Cadastrar</button>

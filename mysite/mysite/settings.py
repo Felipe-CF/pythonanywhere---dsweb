@@ -126,3 +126,5 @@ MEDIA_ROOT = '/home/FelipeCF/mysite/media'
 MEDIA_URL = '/media/'
 STATIC_ROOT = '/home/FelipeCF/mysite/static'
 STATIC_URL = '/static/'
+
+LOGIN_URL = 'login/'

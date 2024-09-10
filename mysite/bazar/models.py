@@ -33,13 +33,25 @@ class Evento(models.Model):
 class Item(models.Model):
     id = models.BigAutoField(editable=False, primary_key=True)
 
-    descricao = models.TextField('Descrição', null=False)
+    titulo = models.TextField('Título', null=False, max_length=30, blank=True)
+
+    descricao = models.TextField('Descrição', null=False, max_length=100)
 
     preco = models.FloatField('Preço', validators=[MinValueValidator(0.0)], null=False)
 
     foto = models.ImageField('Imagem', upload_to='fotos/', null=False)
 
-    evento = models.ManyToManyField(Evento)
-
     def __str__(self):
         return f"Item: {self.descricao} - Imagem: {self.foto} - Preço: {self.preco}"
+    
+class EventoItem(models.Model):
+    id = models.BigAutoField(editable=False, primary_key=True)
+
+    evento = models.ForeignKey(Evento, on_delete=models.CASCADE, null=False)
+
+    item = models.ForeignKey(Item, on_delete=models.CASCADE, null=False)
+
+    reservado = models.BooleanField('Reservado', default=False)
+
+    def __str__(self):
+        return f"Evento: {self.evento.nome} - Item: {self.item.titulo} - Preço: {self.preco}"

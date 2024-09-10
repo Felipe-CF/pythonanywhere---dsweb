@@ -13,20 +13,27 @@
     <h1>BAZAR</h1>
 
     {% if request.user.is_authenticated %}
-        {{ request.user.nome }}
 
-        <form action="{% url 'bazar:logout' %}" method="get">
+        <p>Bem vindo(a), {{ client.nome }} </p>
+
+        <form action="{% url 'bazar:logout' %}" method="post">
+            {% csrf_token %}
             <button type="submit">Sair</button>
         </form>
         
     {% else %}
+
         <form action="{% url 'bazar:login' %}" method="get">
             <button type="submit" >Entrar</button>
         </form>
+
         <form action="{% url 'bazar:cadastro' %}" method="get">
             <button type="submit" >Criar Conta</button>
         </form>
+
     {% endif %}
+
+    
 </body>
 
 

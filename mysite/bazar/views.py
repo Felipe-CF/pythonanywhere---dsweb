@@ -1,8 +1,8 @@
 import re
-from .models import *
 from bazar.forms import *
 from django.views import View
 from django.urls import reverse
+from django.contrib import messages
 from django.contrib.auth.models import User
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
@@ -11,13 +11,17 @@ from django.contrib.auth import authenticate, login, logout, update_session_auth
 
 
 class BazarIndex(View):
+
     def get(self, request, *args, **kwargs):
-        return render(request, 'bazar_index.html')
-    
 
-class UsuarioView(View):
-    pass
+        cliente = None
 
+        if request.user.is_authenticated:
+             
+             cliente = Cliente.objects.get(user=request.user)
+
+        return render(request, 'bazar_index.html', context={'cliente': cliente})
+   
 
 class CadastroView(View):
 
@@ -53,228 +57,107 @@ class CadastroView(View):
             return render(request, "cadastro.html", {'form': form}) 
 
 
-
-
 class LogarView(View):
     def get(self, request, *args, **kwargs):
         return render(request, 'login.html')
 
     def post(self, request, *args, **kwargs):
+
         dados_requisicao = request.POST
 
-        if 'nome_login' in dados_requisicao and 'senha_usuario' in dados_requisicao:
-            nome_login = dados_requisicao.get('nome_login')
-            senha = dados_requisicao.get('senha_usuario')
+        if dados_requisicao['login'] != '' and  dados_requisicao['senha'] != '':
+            nome_login = dados_requisicao.get('login')
+
+            senha = dados_requisicao.get('senha')
 
             usuario = authenticate(username=nome_login, password=senha)
 
             if usuario is not None:
                 login(request, usuario)
-                return redirect(reverse('dama:index'))
+
+                return redirect(reverse('bazar:bazar_index'))
+            
             else:
-                return render(request, 'login.html', {'erro': 'Nome de usuário ou senha incorretos.'})
+                messages.error(request, 'O usuario não existe.')
+
+                return render(request, 'login.html')
+            
         else:
-            return render(request, 'login.html', {'erro': 'Por favor, preencha todos os campos.'})
+            messages.error(request, 'Insira os dados obrigatorios.')
+
+            return render(request, 'login.html')
 
 
 class LogoutView(View):
+        
+        @method_decorator(login_required)
         def post(self, request, *args, **kwargs):
+
             logout(request)
 
-            return HttpResponseRedirect(reverse('dama:index'))
+            return HttpResponseRedirect(reverse('bazar:bazar_index'))
         
 
 class EditarPerfilView(View):
+
+    @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
         
         if request.user.is_authenticated:
-            usuario = request.user 
 
-            contexto = {}
+            form = ClienteForm()
 
-            if hasattr(usuario, 'usuarioanonimo'):
+            return render(request, "editar.html", context={'form':form})
 
-                contexto['tipo_usuario'] = 'anonimo'
-
-            elif hasattr(usuario, 'usuarioprofissional'):
-
-                contexto['tipo_usuario'] = 'profissional'
-            
-            elif hasattr(usuario, 'usuarioong'):
-
-                contexto['tipo_usuario'] = 'ong'
-            
-            else:
-
-                contexto['tipo_usuario'] = 'problema_usuario'
-
-            return render(request, "editar.html", context=contexto)
-        
-
-        return render(request, "crud.html")
-
+    @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
 
-        if request.user.is_authenticated:
+        if request.user.is_authenticated :
 
-            contexto = {}
+            form = ClienteForm(request.POST)
 
-            usuario_logado = request.user 
+            if form.is_valid():
 
-            dados_requisicao = request.POST
-
-            if 'nome_login' in dados_requisicao and 'senhaa' in dados_requisicao:
-
-                nome_login = dados_requisicao.get('nome_login')
-
-                senha = dados_requisicao.get('senhaa')
-
-                if hasattr(usuario_logado, 'usuarioanonimo'):
-
-                    usuario = UsuarioAnonimo.objects.get(usuario=usuario_logado)
-
-                    if usuario is not None:
-                        
-                        usuario.nome_login = nome_login
-
-                        usuario.senha = senha
-                        
-                        usuario.save()
-
-                        usuario.usuario.username = nome_login
-
-                        usuario.usuario.email = email
-
-                        usuario.usuario.set_password(senha) 
-
-                        usuario.usuario.save()
-
-                        update_session_auth_hash(request, usuario.usuario)
-
-                        return HttpResponseRedirect(reverse('dama:perfil'))
-
-                    else:
-                        contexto = {
-                            'mensagem': 'usuario não foi encontrado no banco'
-                        }
-                    
-
-                elif hasattr(usuario_logado, 'usuarioprofissional'):
-
-                    usuario = UsuarioProfissional.objects.get(usuario=usuario_logado)
-
-                    if usuario is not None:
-
-                        if 'crp' in dados_requisicao and 'nome_completo' in dados_requisicao:
-
-                            nome_completo = dados_requisicao.get('nome_completo')
-
-                            crp = dados_requisicao.get('crp')
-
-                            email = dados_requisicao.get('email')
-
-                            contato = dados_requisicao.get('contato')
-
-                            validacao_contato = re.search(r'^\d{2}\s*\d{9}$', contato)
-
-                            usuario.nome_login = nome_login
-
-                            usuario.senha = senha
-
-                            usuario.nome_completo = nome_completo
-
-                            usuario.cadastro_crp = crp
-
-                            usuario.email = email
-
-                            usuario.telefone = contato
-
-                            usuario.save()
-
-                            usuario.usuario.username = nome_login
-
-                            usuario.usuario.email = email
-
-                            usuario.usuario.set_password(senha) 
-
-                            usuario.usuario.save()
-
-                            update_session_auth_hash(request, usuario.usuario)
-
-                            return HttpResponseRedirect(reverse('dama:perfil'))
-                        
-                    else:
-                        contexto = {
-                            'mensagem_erro': 'usuario não foi encontrado no banco'
-                        }
-
+                usuario = request.user
                 
-                elif hasattr(usuario_logado, 'usuarioong'):
+                nome = form.cleaned_data['nome']
 
-                    usuario = UsuarioOng.objects.get(usuario=usuario_logado)
+                nome_login = form.cleaned_data['login']
+                
+                senha = form.cleaned_data['senha']
 
-                    if usuario is not None:
+                cliente = Cliente.objects.get(user=usuario)
+                
+                if nome is not '' and nome is not None:
+                    cliente.nome = nome
 
-                        if 'cnpj' in dados_requisicao and 'razao_social' in dados_requisicao:
+                if nome_login is not '' and nome_login is not None:
 
-                            razao_social = dados_requisicao.get('razao_social')
+                    cliente.user.username = nome_login
 
-                            cnpj = dados_requisicao.get('cnpj')
+                    cliente.login = nome_login
+                
+                if senha is not '' and senha is not None:
 
-                            email = dados_requisicao.get('email')
+                    cliente.senha = senha
 
-                            contato = dados_requisicao.get('contato')
+                    cliente.user.set_password(senha) 
 
-                            validacao_contato = re.search(r'^\d{2}\s*\d{9}$', contato)
+                cliente.user.save() 
 
-                            usuario.nome_login = nome_login
+                cliente.save()
 
-                            usuario.senha = senha
-                            
-                            usuario.razao_social = razao_social
+                update_session_auth_hash(request, cliente.user)
 
-                            usuario.cnpj = cnpj
-
-                            usuario.email = email
-
-                            usuario.telefone = validacao_contato
-
-                            usuario.save()
-
-                            usuario.usuario.username = nome_login
-
-                            usuario.usuario.set_password(senha) 
-
-                            usuario.usuario.save()
-
-                            update_session_auth_hash(request, usuario.usuario)
-
-                            return HttpResponseRedirect(reverse('dama:perfil'))
-                        
-                    else:
-                        contexto = {
-                            'mensagem_erro': 'usuario não foi encontrado no banco'
-                        }
-
-                else:
-                    contexto = {
-                            'mensagem_erro': 'tipo de usuario não identificado'
-                        }
-            else:
-                contexto = {
-                    'mensagem_erro': 'dados obrigatorios não foram passados'
-                    }
-        
-            return render(request, "editar.html", context=contexto) # usar o contexto para alterar
-        
-        else: # usuario nao autenticado
-            contexto = {
-                    'mensagem_erro': 'ususario não foi autenticado'
-                }
-            return render(request, "crud.html", context=contexto)
+                return HttpResponseRedirect(reverse('bazar:bazar_index'))
             
+            else:
+                return HttpResponseRedirect(reverse('bazar:editar'))
+                     
         
 class DeletePerfilView(View):
+        
+        @method_decorator(login_required)
         def get(self, request, *args, **kwargs):
 
             if request.user.is_authenticated:
@@ -288,77 +171,10 @@ class DeletePerfilView(View):
                 return HttpResponseRedirect(reverse('dama:index'))
             
             else:
-                contexto ={
-                    'erro': 'problema ao autenticar usuario'
-                }
+                messages.error(request, 'Não foi possível deletar a conta')
 
-                return render(request, "crud.html", context=contexto)
-
-
-class PerfilView(View):
-    def get(self, request, *args, **kwargs):
-
-        if request.user.is_authenticated:
-            try:
-
-                usuario_perfil = request.user
-
-                contexto = {}
-
-                if hasattr(usuario_perfil, 'usuarioanonimo'):
-                    usuario_anonimo = usuario_perfil.usuarioanonimo
-
-                    contexto['tipo_usuario'] = 'anonimo'
-
-                    contexto['nome_login'] = usuario_perfil.username
-
-                    contexto['senha'] = usuario_anonimo.senha
-                
-                elif hasattr(usuario_perfil, 'usuarioprofissional'):
-                    usuario_pro = usuario_perfil.usuarioprofissional
-
-                    contexto['tipo_usuario'] = 'profissional'
-
-                    contexto['nome_completo'] = usuario_pro.nome_completo
-
-                    contexto['nome_login'] = usuario_perfil.username
-
-                    contexto['cadastro_crp'] = usuario_pro.cadastro_crp
-
-                    contexto['telefone'] = usuario_pro.telefone
-
-                    contexto['email'] = usuario_pro.email
-
-                elif hasattr(usuario_perfil, 'usuarioong'):
-                    usuario_ong = usuario_perfil.usuarioong
-
-                    contexto['tipo_usuario'] = 'ong'
-
-                    contexto['nome_login'] = usuario_perfil.username
-
-                    contexto['razao_social'] = usuario_ong.razao_social
-
-                    contexto['cnpj'] = usuario_ong.cnpj
-
-                    contexto['telefone'] = usuario_ong.telefone
-
-                    contexto['email'] = usuario_ong.email
-
-                else:
-                    return redirect('dama:index')
-            
-            except Exception as e:
-                contexto['mensagem_erro'] = 'erro ao carregar o usuario'
-
-            return render(request, 'crud.html', context=contexto)
-        
-        else:
-            return redirect('dama:login')
-
-                
-    def post(self, request, *args, **kwargs):
-       pass
-    
+                return render(request, "perfil.html")
+ 
 
 class ItemView(View):
         def get(self, request, *args, **kwargs):
