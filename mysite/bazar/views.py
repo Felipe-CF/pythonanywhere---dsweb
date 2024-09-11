@@ -177,12 +177,34 @@ class DeletePerfilView(View):
  
 
 class ItemView(View):
-        def get(self, request, *args, **kwargs):
-            return render(request, "mural.html")
         
-        # requisição para filtrar os relatos por data de publicação
+        @method_decorator(login_required)
+        def get(self, request, *args, **kwargs): 
+
+            item = ItemForm()
+
+            return render(request, "item.html", context={'item': item})
+        
+        @method_decorator(login_required)
         def post(self, request, *args, **kwargs):
-            pass
+
+            form = ItemForm(request.POST, request.FILES)
+
+            if form.is_valid():
+
+                form.save()
+
+                return HttpResponseRedirect(reverse('bazar:bazar_index'))
+            
+            else:
+
+                print(form.errors)
+
+                form_item = ItemForm()
+
+                return render(request, 'item.html', context={'item': form_item})
+                
+
 
     
 

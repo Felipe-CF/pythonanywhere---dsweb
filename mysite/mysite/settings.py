@@ -122,7 +122,8 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-MEDIA_ROOT = '/home/FelipeCF/mysite/media'
+# MEDIA_ROOT = '/home/FelipeCF/mysite/media'
+MEDIA_ROOT = 'C:\\Users\\OMoral\\Desktop\\CODIGOS\\pythonanywhere---dsweb\\mysite\\media'
 MEDIA_URL = '/media/'
 STATIC_ROOT = '/home/FelipeCF/mysite/static'
 STATIC_URL = '/static/'

@@ -33,7 +33,7 @@ class Evento(models.Model):
 class Item(models.Model):
     id = models.BigAutoField(editable=False, primary_key=True)
 
-    titulo = models.TextField('Título', null=False, max_length=30, blank=True)
+    titulo = models.CharField('Título', null=False, max_length=30, blank=True)
 
     descricao = models.TextField('Descrição', null=False, max_length=100)
 
