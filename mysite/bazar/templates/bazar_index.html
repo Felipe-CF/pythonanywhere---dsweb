@@ -29,7 +29,15 @@
             <button type="submit">Sair</button>
         </form>
 
-        <a href="{% url 'bazar:item' %}">Item</a>
+        <button>
+            <a href="{% url 'bazar:item' %}">Item</a>
+        </button>
+        
+        <button>
+            <a href="{% url 'bazar:evento' %}">Evento</a>
+        </button>
+
+
         
     {% else %}
 

@@ -203,6 +203,35 @@ class ItemView(View):
                 form_item = ItemForm()
 
                 return render(request, 'item.html', context={'item': form_item})
+            
+
+class EventoView(View):
+        
+        @method_decorator(login_required)
+        def get(self, request, *args, **kwargs): 
+
+            form = EventoForm()
+
+            return render(request, "evento.html", context={'form': form})
+        
+        @method_decorator(login_required)
+        def post(self, request, *args, **kwargs):
+
+            form = EventoForm(request.POST, request.FILES)
+
+            if form.is_valid():
+
+                form.save()
+
+                return HttpResponseRedirect(reverse('bazar:bazar_index'))
+            
+            else:
+
+                print(form.errors)
+
+                form = EventoForm()
+
+                return render(request, 'item.html', context={'form': form})
                 
 
 

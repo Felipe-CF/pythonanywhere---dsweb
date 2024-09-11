@@ -15,20 +15,6 @@ class Cliente(models.Model):
     def __str__(self):
         return f"Cliente: {self.nome}"
 
-class Evento(models.Model):
-    id = models.BigAutoField(editable=False, primary_key=True)
-
-    nome = models.CharField('Nome do evento', max_length=100, null=False)
-
-    banner = models.ImageField('Banner', upload_to='fotos/', null=False)
-
-    data_inicio = models.DateTimeField('Inicio do evento', null=False)
-
-    data_fim = models.DateTimeField('Fim do evento',  null=True)
-
-    def __str__(self):
-        return f"Evento: {self.nome} - Início: {self.data_inicio} - Fim: {self.data_fim}"
-
 
 class Item(models.Model):
     id = models.BigAutoField(editable=False, primary_key=True)
@@ -43,6 +29,24 @@ class Item(models.Model):
 
     def __str__(self):
         return f"Item: {self.descricao} - Imagem: {self.foto} - Preço: {self.preco}"
+    
+
+class Evento(models.Model):
+    id = models.BigAutoField(editable=False, primary_key=True)
+
+    nome = models.CharField('Nome do evento', max_length=100, null=False)
+
+    banner = models.ImageField('Banner', upload_to='fotos/', null=False)
+
+    data_inicio = models.DateTimeField('Inicio do evento', null=False)
+
+    data_fim = models.DateTimeField('Fim do evento',  null=True)
+
+    itens = models.ManyToManyField(Item, through='EventoItem') # usa a classe intermediaria para a relação
+
+    def __str__(self):
+        return f"Evento: {self.nome} - Início: {self.data_inicio} - Fim: {self.data_fim}"
+
     
 class EventoItem(models.Model):
     id = models.BigAutoField(editable=False, primary_key=True)

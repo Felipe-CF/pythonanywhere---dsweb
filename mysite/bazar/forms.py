@@ -1,5 +1,6 @@
 from bazar.models import *
 from django import forms
+from django.forms import DateTimeInput
 
 class ClienteForm(forms.ModelForm):
 
@@ -24,3 +25,26 @@ class ItemForm(forms.ModelForm):
         super(ItemForm, self).__init__(*args, **kwargs)
 
         self.fields['preco'].initial = 0  
+
+
+class EventoForm(forms.ModelForm):
+
+    itens = forms.ModelMultipleChoiceField(
+        queryset=Item.objects.all(),
+        widget=forms.SelectMultiple,  # Ou SelectMultiple, dependendo da interface
+        required=False
+    )
+
+    class Meta:
+        model = Evento
+
+        fields = ['nome', 'banner', 'data_inicio', 'data_fim', 'itens']
+
+        widgets ={
+            'data_inicio': DateTimeInput(attrs={'type': 'datetime-local'}),
+            'data_fim': DateTimeInput(attrs={'type': 'datetime-local'}),
+        }
+        
+
+
+
