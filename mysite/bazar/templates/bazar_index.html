@@ -34,6 +34,15 @@
             <a class="nav-link active" aria-current="page" href="{% url 'bazar:bazar_index' %}">Home</a>
           </li>
 
+          
+          <li class="nav-item">
+            <a class="nav-link" href="#">Eventos</a>
+          </li>
+          
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'bazar:itens' %}">Itens</a>
+          </li>
+          
           {% if not request.user.is_authenticated %}
 
           <li class="nav-item">
@@ -44,7 +53,6 @@
             <a class="nav-link" href="{% url 'bazar:cadastro' %}">Criar Conta</a>
           </li>
 
-
           {% else %}
           
             <li class="nav-item dropdown">
@@ -52,10 +60,6 @@
                 {{ cliente.nome }} 
               </a>
               <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="{% url 'bazar:item' %}">Item</a></li>
-
-                <li><a class="dropdown-item" href="{% url 'bazar:evento' %}">Evento</a></li>
-
                 <li><a class="dropdown-item" href="{% url 'bazar:logout' %}">Sair</a></li>
               </ul>
 
@@ -76,7 +80,7 @@
           <div class="card-body">
             <h5 class="card-title">{{ evento.nome }}</h5>
             <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            <a href="#" class="btn btn-primary">Ver Itens</a>
+            <a href="{% url 'bazar:item-evento' evento.id  %}" class="btn btn-primary">Ver Itens</a>
           </div>
         </div>
 
