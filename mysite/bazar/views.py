@@ -2,6 +2,7 @@ import re
 from bazar.forms import *
 from django.views import View
 from bazar.models import Evento
+from django.utils import timezone
 from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth.models import User
@@ -22,7 +23,14 @@ class BazarIndex(View):
              
              cliente = Cliente.objects.get(user=request.user)
 
-        return render(request, 'bazar_index.html', context={'cliente': cliente})
+        eventos = Evento.objects.filter(data_fim__gte=timezone.now()).order_by('data_fim')[:8]
+
+        contexto = {
+            'cliente': cliente,
+            'eventos': eventos
+        }
+
+        return render(request, 'bazar_index.html', context=contexto)
    
 
 class CadastroView(View):
