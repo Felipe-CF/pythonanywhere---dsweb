@@ -18,43 +18,58 @@
 
 <body>
 
+  <nav class="navbar navbar-expand-lg bg-info">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="">Bazar</a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarNavDropdown">
+
+        <ul class="navbar-nav">
+
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="{% url 'bazar:bazar_index' %}">Home</a>
+          </li>
+
+          {% if not request.user.is_authenticated %}
+
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'bazar:login' %}">Entrar</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'bazar:cadastro' %}">Criar Conta</a>
+          </li>
+
+
+          {% else %}
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                {{ cliente.nome }} 
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{% url 'bazar:item' %}">Item</a></li>
+
+                <li><a class="dropdown-item" href="{% url 'bazar:evento' %}">Evento</a></li>
+
+                <li><a class="dropdown-item" href="{% url 'bazar:logout' %}">Sair</a></li>
+              </ul>
+
+            </li>
+          
+            {% endif %}
+
+        </ul>
+      </div>
+    </div>
+  </nav>
+
     <h1>BAZAR</h1>
 
-    {% if request.user.is_authenticated %}
-
-        <p>Bem vindo(a), {{ client.nome }} </p>
-
-        <form action="{% url 'bazar:logout' %}" method="post">
-            {% csrf_token %}
-            <button type="submit">Sair</button>
-        </form>
-
-        <button>
-            <a href="{% url 'bazar:item' %}">Item</a>
-        </button>
-        
-        <button>
-            <a href="{% url 'bazar:evento' %}">Evento</a>
-        </button>
-
-
-        
-    {% else %}
-
-        <form action="{% url 'bazar:login' %}" method="get">
-            <button type="submit" >Entrar</button>
-        </form>
-
-        <form action="{% url 'bazar:cadastro' %}" method="get">
-            <button type="submit" >Criar Conta</button>
-        </form>
-
-    {% endif %}
-
-
-    <!-- eventos cadastrados -->
-
-    
 </body>
 
 

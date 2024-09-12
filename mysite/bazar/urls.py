@@ -13,7 +13,6 @@ urlpatterns = [
     path('editar/', views.EditarPerfilView.as_view(), name='editar'),
     path('item/', views.ItemView.as_view(), name='item'),
     path('evento/', views.EventoView.as_view(), name='evento'),
-    # path('item/', )
 ]
 
 

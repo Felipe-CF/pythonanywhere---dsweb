@@ -16,21 +16,6 @@ class Cliente(models.Model):
         return f"Cliente: {self.nome}"
 
 
-class Item(models.Model):
-    id = models.BigAutoField(editable=False, primary_key=True)
-
-    titulo = models.CharField('Título', null=False, max_length=30, blank=True)
-
-    descricao = models.TextField('Descrição', null=False, max_length=100)
-
-    preco = models.FloatField('Preço', validators=[MinValueValidator(0.0)], null=False)
-
-    foto = models.ImageField('Imagem', upload_to='fotos/', null=False)
-
-    def __str__(self):
-        return f"Item: {self.descricao} - Imagem: {self.foto} - Preço: {self.preco}"
-    
-
 class Evento(models.Model):
     id = models.BigAutoField(editable=False, primary_key=True)
 
@@ -42,20 +27,20 @@ class Evento(models.Model):
 
     data_fim = models.DateTimeField('Fim do evento',  null=True)
 
-    itens = models.ManyToManyField(Item, through='EventoItem') # usa a classe intermediaria para a relação
+    itens = models.ManyToManyField('Item', related_name='eventos')
 
     def __str__(self):
         return f"Evento: {self.nome} - Início: {self.data_inicio} - Fim: {self.data_fim}"
 
-    
-class EventoItem(models.Model):
+
+class Item(models.Model):
     id = models.BigAutoField(editable=False, primary_key=True)
 
-    evento = models.ForeignKey(Evento, on_delete=models.CASCADE, null=False)
+    descricao = models.CharField('Descrição', null=False, max_length=60)
 
-    item = models.ForeignKey(Item, on_delete=models.CASCADE, null=False)
+    preco = models.FloatField('Preço', validators=[MinValueValidator(0.0)], null=False)
 
-    reservado = models.BooleanField('Reservado', default=False)
+    foto = models.ImageField('Imagem', upload_to='fotos/', null=False)
 
     def __str__(self):
-        return f"Evento: {self.evento.nome} - Item: {self.item.titulo} - Preço: {self.preco}"
+        return f"Item: {self.descricao} - Imagem: {self.foto} - Preço: {self.preco}"

@@ -1,9 +1,11 @@
 import re
 from bazar.forms import *
 from django.views import View
+from bazar.models import Evento
 from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth.models import User
+from bazar.forms import EventoForm, ItemFormSet
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, HttpResponseRedirect, redirect
@@ -91,7 +93,7 @@ class LogarView(View):
 class LogoutView(View):
         
         @method_decorator(login_required)
-        def post(self, request, *args, **kwargs):
+        def get(self, request, *args, **kwargs):
 
             logout(request)
 
@@ -210,29 +212,46 @@ class EventoView(View):
         @method_decorator(login_required)
         def get(self, request, *args, **kwargs): 
 
-            form = EventoForm()
+            evento_form = EventoForm()
 
-            return render(request, "evento.html", context={'form': form})
+            item_formset = ItemFormSet(queryset=Item.objects.none())  # Nenhum item inicialmente
+
+            contexto = {
+                'evento_form': evento_form,
+                'form_itens': item_formset,
+            }
+
+            return render(request, 'evento.html', context=contexto)
+
         
         @method_decorator(login_required)
         def post(self, request, *args, **kwargs):
 
-            form = EventoForm(request.POST, request.FILES)
+            evento_form = EventoForm(request.POST, request.FILES)
 
-            if form.is_valid():
+            itens_forms = ItemFormSet(request.POST, request.FILES)
 
-                form.save()
+
+            if evento_form.is_valid() and itens_forms.is_valid():
+
+                evento = evento_form.save() # salvo o evento
+
+                # Salva os itens
+                for form in itens_forms:
+
+                    item = form.save(commit=False)
+
+                    item.save()
+
+                    evento.itens.add(item)
+                
+                evento.save()
 
                 return HttpResponseRedirect(reverse('bazar:bazar_index'))
             
             else:
 
-                print(form.errors)
-
-                form = EventoForm()
-
-                return render(request, 'item.html', context={'form': form})
-                
+                return render(request, 'evento.html', context={'evento_form': evento_form, 'form_itens': itens_forms})
 
 
     
