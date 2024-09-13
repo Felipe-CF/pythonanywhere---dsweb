@@ -197,9 +197,14 @@ class ItensEventoView(View):
 
             itens = Item.objects.filter(evento=evento)
 
+            user_cliente = request.user
+
+            cliente = Cliente.objects.get(user=user_cliente)
+
             contexto = {
                 'evento': evento,
-                'itens': itens
+                'itens': itens,
+                'cliente': cliente
             }
 
             return render(request, "ver_evento.html", context=contexto)
@@ -277,7 +282,16 @@ class ItensView(View):
 
             itens = Item.objects.all()
 
-            return render(request, "itens.html", context={'itens': itens})
+            user_cliente = request.user
+
+            cliente = Cliente.objects.get(user=user_cliente)
+
+            contexto = {
+                'itens': itens,
+                'cliente': cliente
+            }
+
+            return render(request, "itens.html", context=contexto)
         
         @method_decorator(login_required)
         def post(self, request, *args, **kwargs):
@@ -292,7 +306,7 @@ class ItensView(View):
 
                 if pesquisa_item != '':
 
-                    itens = Item.objects.filter(nome__icontains=pesquisa_item)
+                    itens = Item.objects.filter(descricao__icontains=pesquisa_item)
                     
                     contexto['itens'] = itens
 
@@ -307,6 +321,26 @@ class ItensView(View):
                 contexto['status'] = 'erro'
 
             return render(request, 'itens.html', context=contexto)
+
+
+class ReservarView(View):
+
+    @method_decorator(login_required)
+    def get(self, request, *args, **kwargs):
+
+        item_id = kwargs.get('id')
+
+        item = Item.objects.get(id=item_id)
+
+        if not item.reservado:
+
+            item.reservado = True
+
+            item.save()
+
+        referer_url = request.META.get('HTTP_REFERER', reverse('bazar:bazar_index'))
+
+        return HttpResponseRedirect(referer_url)
 
 
 

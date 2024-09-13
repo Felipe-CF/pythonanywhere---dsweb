@@ -58,16 +58,16 @@
           </li>
 
           {% else %}
-          
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                {{ cliente.nome }} 
-              </a>
-              <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="{% url 'bazar:logout' %}">Sair</a></li>
-              </ul>
 
-            </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              {{ cliente.nome }} 
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="{% url 'bazar:logout' %}">Sair</a></li>
+            </ul>
+
+          </li>
           
             {% endif %}
 
@@ -90,7 +90,7 @@
             {% if item.reservado %}
                 <p class="card-text"><small class="text-body-secondary">Reservado</small></p>
               {% else %}
-              <a href="{% url 'bazar:item-evento' evento.id  %}" class="btn btn-primary">Reservar</a>
+              <a href="{% url 'bazar:reservar' item.id  %}" class="btn btn-primary">Reservar</a>
               {% endif %}
             </div>
           </div>
