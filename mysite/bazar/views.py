@@ -195,7 +195,14 @@ class ItensEventoView(View):
 
             evento = Evento.objects.get(id=id_evento)
 
-            return render(request, "ver_evento.html", context={'evento': evento})
+            itens = Item.objects.filter(evento=evento)
+
+            contexto = {
+                'evento': evento,
+                'itens': itens
+            }
+
+            return render(request, "ver_evento.html", context=contexto)
         
         @method_decorator(login_required)
         def post(self, request, *args, **kwargs):
@@ -248,13 +255,13 @@ class EventoView(View):
 
                 # Salva os itens
                 for form in itens_forms:
-
+                    
                     item = form.save(commit=False)
+
+                    item.evento = evento
 
                     item.save()
 
-                    evento.itens.add(item)
-                
                 evento.save()
 
                 return HttpResponseRedirect(reverse('bazar:bazar_index'))
@@ -270,27 +277,37 @@ class ItensView(View):
 
             itens = Item.objects.all()
 
-            return render(request, "item.html", context={'itens': itens})
+            return render(request, "itens.html", context={'itens': itens})
         
         @method_decorator(login_required)
         def post(self, request, *args, **kwargs):
 
-            form = ItemForm(request.POST, request.FILES)
-
-            if form.is_valid():
-
-                form.save()
-
-                return HttpResponseRedirect(reverse('bazar:bazar_index'))
+            dados_pesquisa = request.POST
             
+            contexto = {}
+
+            if 'pesquisa' in dados_pesquisa:
+
+                pesquisa_item = dados_pesquisa.get('pesquisa')
+
+                if pesquisa_item != '':
+
+                    itens = Item.objects.filter(nome__icontains=pesquisa_item)
+                    
+                    contexto['itens'] = itens
+
+                else:
+
+                    contexto['itens'] = Item.objects.all()
+
+                contexto['status'] = 'sucesso'
+                
             else:
 
-                print(form.errors)
+                contexto['status'] = 'erro'
 
-                form_item = ItemForm()
+            return render(request, 'itens.html', context=contexto)
 
-                return render(request, 'item.html', context={'item': form_item})
-    
 
 
 

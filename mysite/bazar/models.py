@@ -27,8 +27,6 @@ class Evento(models.Model):
 
     data_fim = models.DateTimeField('Fim do evento',  null=True)
 
-    itens = models.ManyToManyField('Item', related_name='eventos')
-
     def __str__(self):
         return f"Evento: {self.nome} - Início: {self.data_inicio} - Fim: {self.data_fim}"
 
@@ -41,6 +39,10 @@ class Item(models.Model):
     preco = models.FloatField('Preço', validators=[MinValueValidator(0.0)], null=False)
 
     foto = models.ImageField('Imagem', upload_to='fotos/', null=False)
+
+    evento = models.ForeignKey(Evento, on_delete=models.CASCADE, default=None)
+
+    reservado = models.BooleanField('Reservado', default=False)
 
     def __str__(self):
         return f"Item: {self.descricao} - Imagem: {self.foto} - Preço: {self.preco}"
