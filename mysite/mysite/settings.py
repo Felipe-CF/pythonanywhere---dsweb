@@ -122,13 +122,13 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# MEDIA_ROOT = '/home/FelipeCF/mysite/media'
-MEDIA_ROOT = 'C:\\Users\\OMoral\\Desktop\\CODIGOS\\pythonanywhere---dsweb\\mysite\\media'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = '/home/FelipeCF/mysite/media'
+# MEDIA_ROOT = 'C:\\Users\\OMoral\\Desktop\\CODIGOS\\pythonanywhere---dsweb\\mysite\\media'
 # MEDIA_ROOT = 'C:\\Users\\20231014040005\\Desktop\\pythonanywhere---dsweb\\mysite\\media'
 # MEDIA_ROOT = 'C:\\Users\\FelipeCosta\\Desktop\\teste\\pythonanywhere---dsweb\\mysite\\media'
-MEDIA_URL = '/media/'
-STATIC_ROOT = 'C:\\Users\\OMoral\\Desktop\\CODIGOS\\pythonanywhere---dsweb\\mysite\\static'
-# STATIC_ROOT = '/home/FelipeCF/mysite/static'
+# STATIC_ROOT = 'C:\\Users\\OMoral\\Desktop\\CODIGOS\\pythonanywhere---dsweb\\mysite\\static'
 STATIC_URL = '/static/'
+STATIC_ROOT = '/home/FelipeCF/mysite/static'
 
 LOGIN_URL = 'login/'
