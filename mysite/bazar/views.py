@@ -1,4 +1,5 @@
 import re
+from math import floor
 from bazar.forms import *
 from django.views import View
 from bazar.models import Evento
@@ -23,7 +24,7 @@ class BazarIndex(View):
              
              cliente = Cliente.objects.get(user=request.user)
 
-        eventos = Evento.objects.filter(data_fim__gte=timezone.now()).order_by('data_fim')[:8]
+        eventos = Evento.objects.filter(data_fim__gt=timezone.now()).order_by('data_fim')
 
         contexto = {
             'cliente': cliente,
@@ -188,7 +189,6 @@ class DeletePerfilView(View):
 
 class ItensEventoView(View):
         
-        @method_decorator(login_required)
         def get(self, request, *args, **kwargs): 
 
             id_evento = kwargs.get('id')
@@ -197,36 +197,40 @@ class ItensEventoView(View):
 
             itens = Item.objects.filter(evento=evento)
 
-            user_cliente = request.user
+            cliente = None
 
-            cliente = Cliente.objects.get(user=user_cliente)
+            if request.user.is_authenticated:
+
+                user_cliente = request.user
+
+                cliente = Cliente.objects.get(user=user_cliente)
 
             contexto = {
                 'evento': evento,
                 'itens': itens,
-                'cliente': cliente
+                'cliente': cliente,
             }
 
             return render(request, "ver_evento.html", context=contexto)
         
-        @method_decorator(login_required)
-        def post(self, request, *args, **kwargs):
+        # @method_decorator(login_required)
+        # def post(self, request, *args, **kwargs):
 
-            form = ItemForm(request.POST, request.FILES)
+        #     form = ItemForm(request.POST, request.FILES)
 
-            if form.is_valid():
+        #     if form.is_valid():
 
-                form.save()
+        #         form.save()
 
-                return HttpResponseRedirect(reverse('bazar:bazar_index'))
+        #         return HttpResponseRedirect(reverse('bazar:bazar_index'))
             
-            else:
+        #     else:
 
-                print(form.errors)
+        #         print(form.errors)
 
-                form_item = ItemForm()
+        #         form_item = ItemForm()
 
-                return render(request, 'item.html', context={'item': form_item})
+        #         return render(request, 'item.html', context={'item': form_item})
             
 
 class EventoView(View):
@@ -282,18 +286,22 @@ class ItensView(View):
 
             itens = Item.objects.all()
 
-            user_cliente = request.user
+            cliente = None
 
-            cliente = Cliente.objects.get(user=user_cliente)
+            if request.user.is_authenticated:
+
+                user_cliente = request.user
+
+                cliente = Cliente.objects.get(user=user_cliente)
 
             contexto = {
                 'itens': itens,
-                'cliente': cliente
+                'cliente': cliente,
             }
 
             return render(request, "itens.html", context=contexto)
         
-        @method_decorator(login_required)
+
         def post(self, request, *args, **kwargs):
 
             dados_pesquisa = request.POST
