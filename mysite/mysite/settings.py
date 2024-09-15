@@ -127,7 +127,8 @@ MEDIA_ROOT = 'C:\\Users\\OMoral\\Desktop\\CODIGOS\\pythonanywhere---dsweb\\mysit
 # MEDIA_ROOT = 'C:\\Users\\20231014040005\\Desktop\\pythonanywhere---dsweb\\mysite\\media'
 # MEDIA_ROOT = 'C:\\Users\\FelipeCosta\\Desktop\\teste\\pythonanywhere---dsweb\\mysite\\media'
 MEDIA_URL = '/media/'
-STATIC_ROOT = '/home/FelipeCF/mysite/static'
+STATIC_ROOT = 'C:\\Users\\OMoral\\Desktop\\CODIGOS\\pythonanywhere---dsweb\\mysite\\static'
+# STATIC_ROOT = '/home/FelipeCF/mysite/static'
 STATIC_URL = '/static/'
 
 LOGIN_URL = 'login/'

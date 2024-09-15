@@ -11,7 +11,10 @@
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
     </script>
-    
+
+    <link rel="stylesheet" type="text/css" href="{% static '/bazar/css/index.css' %}">
+
+
     <title>Bazar</title>
 
 </head>
@@ -79,10 +82,13 @@
       </div>
     </div>
   </nav>
-    {% if eventos %}
 
-      {% for evento in eventos %}
-
+  
+  {% if eventos %}
+  
+    {% for evento in eventos %}
+  
+      <main class="page-content">
         <div class="card" style="width: 18rem;">
           <img class="card-img-top" src="{{ evento.banner.url }}" alt="Banner do evento {{ evento.nome }}">
           <div class="card-body">
@@ -91,14 +97,15 @@
             <a href="{% url 'bazar:item-evento' evento.id  %}" class="btn btn-primary">Ver Itens</a>
           </div>
         </div>
+      </main>
 
-      {% endfor %}
+    {% endfor %}
     
-    {% else %}
+  {% else %}
 
     <h1>Sem eventos</h1>
 
-    {% endif %}
+  {% endif %}
 
 </body>
 
