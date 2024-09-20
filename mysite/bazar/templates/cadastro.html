@@ -11,14 +11,78 @@
 
     <title>Cadastro</title>
 </head>
+
 <body>
+    <nav class="navbar navbar-expand-lg bg-info">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="{% url 'bazar:bazar_index' %}">Bazar</a>
+    
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+    
+          <div class="collapse navbar-collapse" id="navbarNavDropdown">
+    
+            <ul class="navbar-nav">
+    
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="{% url 'bazar:bazar_index' %}">Home</a>
+              </li>
+    
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Eventos
+                </a>
+                <ul class="dropdown-menu">
+                  {% if request.user.is_authenticated %}
+                    <li><a class="dropdown-item" href="{% url 'bazar:evento' %}">Criar Evento</a></li>
+                  {% endif %}
+                  <li><a class="dropdown-item" href="{% url 'bazar:bazar_index' %}">Ver Eventos</a></li>
+                </ul>
+    
+              </li>
+              
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'bazar:itens' %}">Buscar Item</a>
+              </li>
+              
+              {% if not request.user.is_authenticated %}
+    
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'bazar:login' %}">Entrar</a>
+              </li>
+    
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'bazar:cadastro' %}">Criar Conta</a>
+              </li>
+    
+              {% else %}
+              
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    {{ cliente.nome }} 
+                  </a>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{% url 'bazar:logout' %}">Sair</a></li>
+                  </ul>
+    
+                </li>
+              
+                {% endif %}
+    
+            </ul>
+          </div>
+        </div>
+      </nav>
+
     <h1>Cadastro</h1>
 
     <form id="form-cadastro" name="cadastro" action="{% url 'bazar:cadastro' %}" method="post">
-
         {% csrf_token %}
 
-        {{ form.as_p}}
+        <div class="mb-3">
+            {{ form.as_p}}
+        </div>
 
         <button type="submit">Cadastrar</button>
     </form>
