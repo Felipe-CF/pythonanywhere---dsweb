@@ -7,3 +7,31 @@
     border: 1px solid #f00;
     padding: 1px;
 }
+
+
+#banner{
+    margin-bottom:20px;
+    margin-top:20px;
+    width:25%;
+    height:25%;
+}
+
+
+body {
+    background-color:rgb(217, 216, 196);
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+    max-width: 500px; /* Define uma largura máxima para o formulário */
+    width: 100%; /* Garante que o formulário use a largura máxima possível até o limite definido */
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+

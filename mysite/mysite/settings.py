@@ -25,8 +25,8 @@ SECRET_KEY = 'django-insecure-4sf+8*s#*cxl0quam6h5p=%vn2byusi8&ujuwhj+(1c=!vqu((
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-# ALLOWED_HOSTS = ['FelipeCF.pythonanywhere.com']
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['FelipeCF.pythonanywhere.com']
+# ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -123,12 +123,12 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URL = '/media/'
-# MEDIA_ROOT = '/home/FelipeCF/mysite/media'
-MEDIA_ROOT = 'C:\\Users\\OMoral\\Desktop\\CODIGOS\\pythonanywhere---dsweb\\mysite\\media'
+MEDIA_ROOT = '/home/FelipeCF/mysite/media'
+# MEDIA_ROOT = 'C:\\Users\\OMoral\\Desktop\\CODIGOS\\pythonanywhere---dsweb\\mysite\\media'
 # MEDIA_ROOT = 'C:\\Users\\20231014040005\\Desktop\\pythonanywhere---dsweb\\mysite\\media'
 # MEDIA_ROOT = 'C:\\Users\\FelipeCosta\\Desktop\\teste\\pythonanywhere---dsweb\\mysite\\media'
-STATIC_ROOT = 'C:\\Users\\OMoral\\Desktop\\CODIGOS\\pythonanywhere---dsweb\\mysite\\static'
+# STATIC_ROOT = 'C:\\Users\\OMoral\\Desktop\\CODIGOS\\pythonanywhere---dsweb\\mysite\\static'
 STATIC_URL = '/static/'
-# STATIC_ROOT = '/home/FelipeCF/mysite/static'
+STATIC_ROOT = '/home/FelipeCF/mysite/static'
 
 LOGIN_URL = 'login/'
